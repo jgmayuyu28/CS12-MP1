@@ -8,8 +8,8 @@ class WorldItem: #ASSIGNS EACH CELL OF TILEMAP THE COORDINATES OF AN ITEM FROM T
     MIRROR_LEFT = (5, 0)
     MIRROR_RIGHT = (5, 1)
     OPEN = (0, 0)
-    PLAYER_V = (3, 0)
-    PLAYER_U = (3, 0)
+    PLAYER = (10, 0)
+    PLAYER_D = (9, 0)
     ENEMY = (0, 2)
     ENEMY_D = (0, 6)
 
@@ -33,8 +33,8 @@ class World:
                     self.world_map[y].append(WorldItem.MIRROR_RIGHT)
                 elif self.tilemap.pget(x, y) == WorldItem.ENEMY:
                     self.world_map[y].append(WorldItem.ENEMY)
-                elif self.tilemap.pget(x, y) == WorldItem.PLAYER_V:
-                    self.world_map[y].append(WorldItem.OPEN)
+                elif self.tilemap.pget(x, y) == WorldItem.PLAYER:
+                    self.world_map[y].append(WorldItem.PLAYER)
                 else:
                     self.world_map[y].append(WorldItem.OPEN)
 

@@ -1,7 +1,8 @@
 import pyxel
 from world import WorldItem, TILE_SIZE, SPRITE_BANK, isColliding
+from player import Player
 
-class Bullet:
+class EnemyBullet:
     def __init__(self, x, y, dir, world, player):
         self.x = x
         self.y = y
@@ -24,11 +25,11 @@ class Bullet:
 
         if (
             (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
-            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.ENEMY) and
+            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.PLAYER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
-            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.ENEMY) and
+            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.PLAYER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)):
             if next_tile_top == WorldItem.BRICK:
                 self.state = "INACTIVE" #VANISHES ITSELF
@@ -61,12 +62,12 @@ class Bullet:
             elif next_tile_bottom == WorldItem.STONE:
                 self.state = "INACTIVE"
                 return
-            elif next_tile_top == WorldItem.ENEMY:
-                self.world.set(new_tile_x, tile_y, WorldItem.ENEMY_D) #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR ENEMY DYING WHEN BULLET HITS; THE CELL IS ASSIGNED THE ENEMY_D ITEM AND IS CONNECTED TO THE enemyHit() METHOD IN THE MAIN FILE
+            elif next_tile_top == WorldItem.PLAYER:
+                self.player.state = "INACTIVE" #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR ENEMY DYING WHEN BULLET HITS; THE CELL IS ASSIGNED THE ENEMY_D ITEM AND IS CONNECTED TO THE enemyHit() METHOD IN THE MAIN FILE
                 self.state = "INACTIVE"
                 return
-            elif next_tile_bottom == WorldItem.ENEMY:
-                self.world.set(new_tile_x, tile_y + 1, WorldItem.ENEMY_D) #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR ENEMY DYING WHEN BULLET HITS; THE CELL IS ASSIGNED THE ENEMY_D ITEM AND IS CONNECTED TO THE enemyHit() METHOD IN THE MAIN FILE
+            elif next_tile_bottom == WorldItem.PLAYER:
+                self.player.state = "INACTIVE" #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR ENEMY DYING WHEN BULLET HITS; THE CELL IS ASSIGNED THE ENEMY_D ITEM AND IS CONNECTED TO THE enemyHit() METHOD IN THE MAIN FILE
                 self.state = "INACTIVE"
                 return
         
@@ -94,11 +95,11 @@ class Bullet:
 
         if (
             (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
-            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.ENEMY) and
+            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.PLAYER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
-            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.ENEMY) and
+            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.PLAYER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)):
             if next_tile_top == WorldItem.BRICK:
                 self.state = "INACTIVE"
@@ -130,12 +131,12 @@ class Bullet:
             elif next_tile_bottom == WorldItem.STONE:
                 self.state = "INACTIVE"
                 return
-            elif next_tile_top == WorldItem.ENEMY:
-                self.world.set(new_tile_x, tile_y, WorldItem.ENEMY_D)
+            elif next_tile_top == WorldItem.PLAYER:
+                self.player.state = "INACTIVE"
                 self.state = "INACTIVE"
                 return
-            elif next_tile_bottom == WorldItem.ENEMY:
-                self.world.set(new_tile_x, tile_y + 1, WorldItem.ENEMY_D)
+            elif next_tile_bottom == WorldItem.PLAYER:
+                self.player.state = "INACTIVE"
                 self.state = "INACTIVE"
                 return
         
@@ -161,11 +162,11 @@ class Bullet:
 
         if (
             (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
-            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.ENEMY) and
+            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.PLAYER) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
-            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.ENEMY) and
+            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.PLAYER) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)):
             if next_tile_top == WorldItem.BRICK:
                 self.state = "INACTIVE"
@@ -197,12 +198,12 @@ class Bullet:
             elif next_tile_bottom == WorldItem.STONE:
                 self.state = "INACTIVE"
                 return
-            elif next_tile_top == WorldItem.ENEMY:
-                self.world.set(tile_x, new_tile_y, WorldItem.ENEMY_D)
+            elif next_tile_top == WorldItem.PLAYER:
+                self.player.state = "INACTIVE"
                 self.state = "INACTIVE"
                 return
-            elif next_tile_bottom == WorldItem.ENEMY:
-                self.world.set(tile_x + 1, new_tile_y, WorldItem.ENEMY_D)
+            elif next_tile_bottom == WorldItem.PLAYER:
+                self.player.state = "INACTIVE"
                 self.state = "INACTIVE"
                 return
         
@@ -228,11 +229,11 @@ class Bullet:
 
         if (
             (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
-            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.ENEMY) and
+            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.PLAYER) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
-            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.ENEMY) and
+            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.PLAYER) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)):
             if next_tile_top == WorldItem.BRICK:
                 self.state = "INACTIVE"
@@ -264,12 +265,12 @@ class Bullet:
             elif next_tile_bottom == WorldItem.STONE:
                 self.state = "INACTIVE"
                 return
-            elif next_tile_top == WorldItem.ENEMY:
-                self.world.set(tile_x, new_tile_y, WorldItem.ENEMY_D)
+            elif next_tile_top == WorldItem.PLAYER:
+                self.player.state = "INACTIVE"
                 self.state = "INACTIVE"
                 return
-            elif next_tile_bottom == WorldItem.ENEMY:
-                self.world.set(tile_x + 1, new_tile_y, WorldItem.ENEMY_D)
+            elif next_tile_bottom == WorldItem.PLAYER:
+                self.player.state = "INACTIVE"
                 self.state = "INACTIVE"
                 return
         

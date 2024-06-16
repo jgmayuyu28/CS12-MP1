@@ -12,9 +12,12 @@ class Player:
     def __init__(self, world): #initial coordinates
         self.x = 8
         self.y = 8
+        self.prev_x = self.x
+        self.prev_y = self.y
         self.dir = "DOWN"
         self.world = world
-    
+        self.state = "ACTIVE"
+
     def move_left(self):
         self.player_img = 0
         self.dir = "LEFT"
@@ -46,6 +49,8 @@ class Player:
             )) or (next_tile_bottom != WorldItem.OPEN and isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE))):
             return
         
+        self.prev_x = self.x
+        self.prev_y = self.y
         self.x = new_x
     
     def move_right(self):
@@ -76,6 +81,8 @@ class Player:
             )) or ((next_tile_top != WorldItem.OPEN and isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)) or (next_tile_bottom != WorldItem.OPEN and isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE))):
             return
         
+        self.prev_x = self.x
+        self.prev_y = self.y
         self.x = new_x
 
     def move_up(self):
@@ -106,6 +113,8 @@ class Player:
             )) or ((next_tile_top != WorldItem.OPEN and isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)) or (next_tile_bottom != WorldItem.OPEN and isColliding(self.x, new_y, (tile_x + 1) * TILE_SIZE, new_tile_y * TILE_SIZE))):
             return
         
+        self.prev_x = self.x
+        self.prev_y = self.y
         self.y = new_y
     
     def move_down(self):
@@ -137,4 +146,6 @@ class Player:
             )) or ((next_tile_top != WorldItem.OPEN and isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)) or (next_tile_bottom != WorldItem.OPEN and isColliding(self.x, new_y, (tile_x + 1) * TILE_SIZE, new_tile_y * TILE_SIZE))):
             return
 
+        self.prev_x = self.x
+        self.prev_y = self.y
         self.y = new_y

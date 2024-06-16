@@ -12,12 +12,12 @@
     #LOGIC FOR BULLET HITTING STONE, BRICK, AND MIRROR CELLS (YAY!!!)
     #LOGIC FOR BULLET HITTING ENEMY
     #LOGIC FOR PLAYER-ENEMY TANK COLLISIONS
+    #LOGIC FOR ENEMY RANDOM BULLETS
+    #LOGIC FOR ENEMY RANDOM MOVEMENTS (AI MOVEMENTS, SEE SIR 11CHO'S NOTION)
+    #LOGIC FOR ENEMY BULLET HITTING PLAYER
+    #LOGIC FOR FRIENDLY FIRE (HEHE NOT SURE IMMA SKIP)
 
 #TO BE DONE
-    #LOGIC FOR ENEMY RANDOM MOVEMENTS (AI MOVEMENTS, SEE SIR 11CHO'S NOTION)
-    #LOGIC FOR ENEMY RANDOM BULLETS
-    #LOGIC FOR ENEMY BULLET HITTING PLAYER
-    #LOGIC FOR FRIENDLY FIRE
 
 #PHASE 2
 #TO BE DONE
@@ -49,19 +49,23 @@ class App:
         self.world = World(pyxel.tilemap(0)) #CREATE INSTANCE OF STAGE (WITH TILEMAP AS ARGUMENT)
         self.player = Player(self.world) #CREATE INSTANCE OF PLAYER CHARACTER
         self.player_bullets = [] #TO STORE ALL BULLETS EJECTED BY PLAYER
-        self.enemy1 = Enemy(32, 72, "DOWN", self.world)
-        self.enemy2 = Enemy(64, 32, "LEFT", self.world) 
+        self.enemy1 = Enemy(32, 72, "DOWN", self.world, self.player)
+        self.enemy2 = Enemy(64, 32, "LEFT", self.world, self.player) 
         self.enemies = [self.enemy1, self.enemy2] #TO STORE ALL INSTANCES OF ENEMY TANK
+        self.isGameOver  = False
         pyxel.run(self.update, self.draw)
 
     def update(self): #RUNS ALL FUNCTIONS EVERY FRAME
-        self.playerMovement()
-        self.shoot()
-        self.bulletMovement()
-        self.enemy1.enemyMovement()
-        self.enemyHit()
-        self.enemy1.shootBullets()
-        self.enemy1.bulletMovement()
+        if not self.isGameOver:
+            self.playerMovement()
+            self.shoot()
+            self.bulletMovement()
+            self.enemyHit()
+
+            for enemy in self.enemies: #ENEMY BULLETS RANDOMIZED SPAWN
+                enemy.enemyMovement()
+                enemy.shootBullets()
+                enemy.bulletMovement()
 
     def playerMovement(self): #***FUNCTION TO BE MADE A METHOD OF PLAYER LATER
         if pyxel.btn(pyxel.KEY_W):
@@ -87,17 +91,17 @@ class App:
 
     def shoot(self): #TRIGGER FOR PLAYER'S BULLET #***FUNCTION TO BE MADE A METHOD OF PLAYER LATER
         if pyxel.btnr(pyxel.KEY_Z):
-            self.bullet = Bullet(self.player.x, self.player.y, self.player.dir, self.world)
+            self.bullet = Bullet(self.player.x, self.player.y, self.player.dir, self.world, self.player)
             self.player_bullets.append(self.bullet)
 
     def enemyHit(self): #CHECKS IF PLAYER'S BULLET HITS AN ENEMY TANK
         if self.enemies:
             for enemy in self.enemies:
-                print(int(enemy.x / TILE_SIZE), int(enemy.y / TILE_SIZE))
-                print(self.world.world_map[int(enemy.y / TILE_SIZE)][int(enemy.x / TILE_SIZE)] == WorldItem.ENEMY_D)
                 if self.world.world_map[int(enemy.y / TILE_SIZE)][int(enemy.x / TILE_SIZE)] == WorldItem.ENEMY_D:
-                    print("enemy state inactive")
                     enemy.state = "INACTIVE"
+
+    def draw_game_over(self):
+        pyxel.text(128 / 2 - 17, 128 / 2 - 2, 'Game over', 4)
 
     def draw(self): #ALSO RUNS THE FUNCTIONS EVERY FRAME
         pyxel.cls(0)
@@ -115,11 +119,11 @@ class App:
                     new_player_bullet.append(bullet)
             self.player_bullets = new_player_bullet #UPDATES PLAYER'S BULLETS LIST (INACTIVE AKA VANISHED BULLETS ARE REOMVED)
 
-        self.enemy1.drawBullets()
 
         if self.enemies: #DRAW ENEMY TANKS
             new_enemies = []
             for enemy in self.enemies:
+                enemy.drawBullets() #DRAW ENEMY BULLETS
                 self.world.clear(int(enemy.prev_x / TILE_SIZE), int(enemy.prev_y / TILE_SIZE))
                 if enemy.state == "ACTIVE":
                     self.world.set(int(enemy.x / TILE_SIZE), int(enemy.y / TILE_SIZE), WorldItem.ENEMY)
@@ -129,14 +133,33 @@ class App:
                     self.world.clear(int(enemy.x / TILE_SIZE), int(enemy.y / TILE_SIZE))
             self.enemies = new_enemies #UPDATES ENEMY TANK LIST (INACTIVE AKA DEAD TANKS ARE REOMVED)
 
-        pyxel.blt( #DRAW THE PLAYER
-            self.player.x, 
-            self.player.y, 
-            self.player.IMG, 
-            self.player.U,
-            self.player.V, 
-            self.player.WIDTH, 
-            self.player.HEIGHT
-        )
+        self.world.clear(int(self.player.prev_x / TILE_SIZE), int(self.player.prev_y / TILE_SIZE))
+        if self.player.state == "ACTIVE":
+            pyxel.blt( #DRAW THE PLAYER
+                self.player.x, 
+                self.player.y, 
+                self.player.IMG, 
+                self.player.U,
+                self.player.V, 
+                self.player.WIDTH, 
+                self.player.HEIGHT
+            )
+            self.world.set(int(self.player.x / TILE_SIZE), int(self.player.y / TILE_SIZE), WorldItem.PLAYER)
+
+        elif self.player.state == "INACTIVE":
+            self.draw_game_over()
+            self.isGameOver = True
+            pyxel.blt( #DRAW THE PLAYER
+                self.player.x, 
+                self.player.y, 
+                self.player.IMG, 
+                0,
+                0, 
+                self.player.WIDTH, 
+                self.player.HEIGHT
+            )
+            self.world.clear(int(self.player.x / TILE_SIZE), int(self.player.y / TILE_SIZE))
+        
+        
 
 App()

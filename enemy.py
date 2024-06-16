@@ -1,5 +1,6 @@
+import random
 import pyxel
-from bullet import Bullet, drawBullet
+from enemy_bullet import EnemyBullet, drawBullet
 from world import World, WorldItem, isColliding, TILE_SIZE, SPRITE_BANK
 
 class Enemy:
@@ -11,14 +12,17 @@ class Enemy:
     DX = 1 #movement change
     DY = 1 #movement change
 
-    def __init__(self, x, y, dir, world): #initial coordinates
+    def __init__(self, x, y, dir, world, player): #initial coordinates
         self.x = x
         self.y = y
         self.prev_x = x
         self.prev_y = y
-        self.dir = dir
         self.world = world
+        self.dir = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
+        self.movement_countdown = random.randint(4,8)
         self.bullets = []
+        self.bullet_countdown = random.randint(4,8)
+        self.player = player
         if dir == "LEFT": #INITIAL U, V FOR INITIAL SPRITE
             self.U, self.V = 0, 24
         elif dir == "RIGHT":
@@ -29,22 +33,28 @@ class Enemy:
             self.U, self.V = 8, 16
         self.state = "ACTIVE"
     
-    def enemyMovement(self): #****TO BE REPLACED WITH AI MOVEMENTS (PLEASE FIGURE THIS OUT)
-        if pyxel.btn(pyxel.KEY_UP):
+    def enemyMovement(self): 
+        if self.dir == "UP":
             self.move_up()
-        elif pyxel.btn(pyxel.KEY_DOWN):
+        elif self.dir == "DOWN":
             self.move_down()
-        elif pyxel.btn(pyxel.KEY_LEFT):
+        elif self.dir == "LEFT":
             self.move_left()
-        elif pyxel.btn(pyxel.KEY_RIGHT):
+        elif self.dir == "RIGHT":
             self.move_right()
+        self.movement_countdown  -= 0.05 #RANDOMIZED MOVEMENT LOGIC
+        if self.movement_countdown <= 0:
+            self.dir = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
+            self.movement_countdown  = random.randint(4,8)
 
     #44 TO 68 ARE METHODS FOR ENEMY BULLETS (SAME ADJUSTMENTS WILL BE MADE TO PLAYER CLASS)
 
     def shootBullets(self):
-        if pyxel.btnr(pyxel.KEY_E):
-            self.bullet = Bullet(self.x, self.y, self.dir, self.world)
+        self.bullet_countdown -= 0.05 #RANDOMIZED BULLET LOGIC
+        if self.bullet_countdown <= 0:
+            self.bullet = EnemyBullet(self.x, self.y, self.dir, self.world, self.player)
             self.bullets.append(self.bullet)
+            self.bullet_countdown = random.randint(4, 8)
 
     def drawBullets(self):
         if self.bullets:
