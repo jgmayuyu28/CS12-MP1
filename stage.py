@@ -12,6 +12,8 @@ class StageItem:
     CRACKED_BRICK = (1, 1)
     SPAWNER = (1, 4)
     WATER = (3, 2)
+    HOME = (3,4)
+
 
 
 class Stage:
@@ -58,6 +60,10 @@ class Stage:
                 elif self.tilemap.pget(x, y) == StageItem.SPAWNER:
 
                     self.stage_map[y].append(StageItem.SPAWNER)
+                
+                elif self.tilemap.pget(x,y) == StageItem.HOME:
+
+                    self.stage_map[y].append(StageItem.HOME)
 
                 else:
 
