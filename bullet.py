@@ -59,6 +59,12 @@ class Bullet:
                 self.stage.clear(new_tile_x, tile_y)
                 return
             
+            elif next_tile == StageItem.HOME:
+
+                self.state = "INACTIVE"
+                self.stage.clear(new_tile_x, tile_y)
+                return
+
             elif next_tile == StageItem.MIRROR_LEFT:
 
                 self.state = "ACTIVE"
@@ -117,6 +123,12 @@ class Bullet:
                 return
             
             elif next_tile == StageItem.CRACKED_BRICK:
+
+                self.state = "INACTIVE"
+                self.stage.clear(new_tile_x, tile_y)
+                return
+
+            elif next_tile == StageItem.HOME:
 
                 self.state = "INACTIVE"
                 self.stage.clear(new_tile_x, tile_y)
@@ -185,6 +197,12 @@ class Bullet:
                 self.stage.clear(tile_x, new_tile_y)
                 return
             
+            elif next_tile == StageItem.HOME:
+
+                self.state = "INACTIVE"
+                self.stage.clear(tile_x, new_tile_y)
+                return
+            
             elif next_tile == StageItem.MIRROR_LEFT:
 
                 self.state = "ACTIVE"
@@ -241,6 +259,12 @@ class Bullet:
                 return
             
             elif next_tile == StageItem.CRACKED_BRICK:
+
+                self.state = "INACTIVE"
+                self.stage.clear(tile_x, new_tile_y)
+                return
+            
+            elif next_tile == StageItem.HOME:
 
                 self.state = "INACTIVE"
                 self.stage.clear(tile_x, new_tile_y)
