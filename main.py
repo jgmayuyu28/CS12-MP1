@@ -10,6 +10,10 @@ class App:
     def __init__(self):
 
         pyxel.init(128, 128, title = "Battle City", fps = 40)
+        self.reset()
+        pyxel.run(self.update, self.draw)
+
+    def reset(self):
         pyxel.load("pyxeledit.pyxres")
         self.stage = Stage(pyxel.tilemap(0))
         self.enemies = []
@@ -18,11 +22,13 @@ class App:
         self.enemies.append(self.enemy_1)
         self.last_spawn_time = time.time()
         self.spawn_cooldown = 10
-        pyxel.run(self.update, self.draw)
 
+        pyxel.playm(0, loop=True)
 
     def update(self):
-
+        if pyxel.btnp(pyxel.KEY_R):
+            self.reset()
+            
         if not self.player.isGameOver and not self.player.isGameWon:
 
             self.player.player_behavior()
