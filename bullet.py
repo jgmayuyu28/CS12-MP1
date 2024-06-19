@@ -1,5 +1,5 @@
 import pyxel
-from world import WorldItem, TILE_SIZE, SPRITE_BANK, isColliding
+from world_copy import WorldItem, TILE_SIZE, SPRITE_BANK, isColliding
 
 class Bullet:
     def __init__(self, x, y, dir, world, player):
@@ -22,21 +22,30 @@ class Bullet:
         next_tile_top = self.world.world_map[tile_y][new_tile_x]
         next_tile_bottom = self.world.world_map[tile_y + 1][new_tile_x]
 
+        # ADDED LOGIC FOR BRICK AND CRACKED BRICK (ALREADY ADDED IN RIGHT, UP, AND DOWN)
         if (
-            (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
+            (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE or next_tile_top == WorldItem.CRACKED_BRICK
             or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.ENEMY) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
-            (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
+            (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE or next_tile_bottom == WorldItem.CRACKED_BRICK
             or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.ENEMY) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)):
             if next_tile_top == WorldItem.BRICK:
                 self.state = "INACTIVE" #VANISHES ITSELF
-                self.world.clear(new_tile_x, tile_y) #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR BRICK DISAPPEARING WHEN BULLET HITS
+                self.world.set(new_tile_x, tile_y, WorldItem.CRACKED_BRICK) #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR BRICK DISAPPEARING WHEN BULLET HITS
                 return
             elif next_tile_bottom == WorldItem.BRICK:
                 self.state = "INACTIVE" #VANISHES ITSELF
-                self.world.clear(new_tile_x, tile_y + 1) #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR BRICK DISAPPEARING WHEN BULLET HITS
+                self.world.set(new_tile_x, tile_y + 1, WorldItem.CRACKED_BRICK) #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR BRICK DISAPPEARING WHEN BULLET HITS
+                return
+            elif next_tile_top == WorldItem.CRACKED_BRICK:
+                self.state = "INACTIVE" #VANISHES ITSELF
+                self.world.set(new_tile_x, tile_y, WorldItem.OPEN)
+                return
+            elif next_tile_bottom == WorldItem.CRACKED_BRICK:
+                self.state = "INACTIVE"
+                self.world.set(new_tile_x, tile_y + 1, WorldItem.OPEN)
                 return
             elif next_tile_top == WorldItem.MIRROR_LEFT:
                 self.state = "ACTIVE"
@@ -93,18 +102,26 @@ class Bullet:
         next_tile_bottom = self.world.world_map[tile_y + 1][new_tile_x]
 
         if (
-            (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
+            (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE or next_tile_top == WorldItem.CRACKED_BRICK
             or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.ENEMY) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
-            (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
+            (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE or next_tile_bottom == WorldItem.CRACKED_BRICK
             or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.ENEMY) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)):
             if next_tile_top == WorldItem.BRICK:
+                self.state = "INACTIVE" #VANISHES ITSELF
+                self.world.set(new_tile_x, tile_y, WorldItem.CRACKED_BRICK)
+                return
+            elif next_tile_bottom == WorldItem.BRICK:
+                self.state = "INACTIVE" #VANISHES ITSELF
+                self.world.set(new_tile_x, tile_y + 1, WorldItem.CRACKED_BRICK)
+                return
+            elif next_tile_top == WorldItem.CRACKED_BRICK:
                 self.state = "INACTIVE"
                 self.world.clear(new_tile_x, tile_y)
                 return
-            elif next_tile_bottom == WorldItem.BRICK:
+            elif next_tile_bottom == WorldItem.CRACKED_BRICK:
                 self.state = "INACTIVE"
                 self.world.clear(new_tile_x, tile_y + 1)
                 return
@@ -160,20 +177,28 @@ class Bullet:
         next_tile_bottom = self.world.world_map[new_tile_y][tile_x + 1]
 
         if (
-            (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
+            (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE or next_tile_top == WorldItem.CRACKED_BRICK
             or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.ENEMY) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
-            (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
+            (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE or next_tile_bottom == WorldItem.CRACKED_BRICK
             or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.ENEMY) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)):
             if next_tile_top == WorldItem.BRICK:
+                self.state = "INACTIVE" #VANISHES ITSELF
+                self.world.set(tile_x, new_tile_y, WorldItem.CRACKED_BRICK)
+                return
+            elif next_tile_bottom == WorldItem.BRICK:
+                self.state = "INACTIVE" #VANISHES ITSELF
+                self.world.set(tile_x + 1, new_tile_y, WorldItem.CRACKED_BRICK)
+                return
+            elif next_tile_top == WorldItem.CRACKED_BRICK:
                 self.state = "INACTIVE"
                 self.world.clear(tile_x, new_tile_y)
                 return
-            elif next_tile_bottom == WorldItem.BRICK:
+            elif next_tile_bottom == WorldItem.CRACKED_BRICK:
                 self.state = "INACTIVE"
-                self.world.clear(tile_x + 1, new_tile_y)
+                self.world.clear(tile_x + 1, new_tile_y) #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR BRICK DISAPPEARING WHEN BULLET HITS
                 return
             elif next_tile_top == WorldItem.MIRROR_LEFT:
                 self.state = "ACTIVE"
@@ -227,20 +252,28 @@ class Bullet:
         next_tile_bottom = self.world.world_map[new_tile_y][tile_x + 1]
 
         if (
-            (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
+            (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE or next_tile_top == WorldItem.CRACKED_BRICK
             or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.ENEMY) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
-            (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
+            (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE or next_tile_bottom == WorldItem.CRACKED_BRICK
             or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.ENEMY) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)):
             if next_tile_top == WorldItem.BRICK:
+                self.state = "INACTIVE" #VANISHES ITSELF
+                self.world.set(tile_x, tile_y + 1, WorldItem.CRACKED_BRICK)
+                return
+            elif next_tile_bottom == WorldItem.BRICK:
+                self.state = "INACTIVE" #VANISHES ITSELF
+                self.world.set(tile_x + 1, new_tile_y, WorldItem.CRACKED_BRICK)
+                return
+            elif next_tile_top == WorldItem.CRACKED_BRICK:
                 self.state = "INACTIVE"
                 self.world.clear(tile_x, new_tile_y)
                 return
-            elif next_tile_bottom == WorldItem.BRICK:
+            elif next_tile_bottom == WorldItem.CRACKED_BRICK:
                 self.state = "INACTIVE"
-                self.world.clear(tile_x + 1, new_tile_y)
+                self.world.clear(tile_x + 1, new_tile_y) #FUNCTION IMPORTED FROM WORLD FILE; LOGIC FOR BRICK DISAPPEARING WHEN BULLET HITS
                 return
             elif next_tile_top == WorldItem.MIRROR_LEFT:
                 self.state = "ACTIVE"

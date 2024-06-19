@@ -12,7 +12,10 @@ class WorldItem: #ASSIGNS EACH CELL OF TILEMAP THE COORDINATES OF AN ITEM FROM T
     PLAYER_D = (9, 0)
     ENEMY = (0, 2)
     ENEMY_D = (0, 6)
-
+    CRACKED_BRICK = (5,2) # PHASE 2
+    WATER = (3,2) # PHASE 2
+    SPAWNER = (1,4) # PHASE 2
+    
 class World:
     HEIGHT = 16
     WIDTH = 16
@@ -35,6 +38,12 @@ class World:
                     self.world_map[y].append(WorldItem.ENEMY)
                 elif self.tilemap.pget(x, y) == WorldItem.PLAYER:
                     self.world_map[y].append(WorldItem.PLAYER)
+                elif self.tilemap.pget(x, y) == WorldItem.CRACKED_BRICK: # PHASE 2
+                    self.world_map[y].append(WorldItem.CRACKED_BRICK)
+                elif self.tilemap.pget(x, y) == WorldItem.WATER: # PHASE 2
+                    self.world_map[y].append(WorldItem.WATER)
+                elif self.tilemap.pget(x, y) == WorldItem.SPAWNER: # PHASE 2
+                    self.world_map[y].append(WorldItem.SPAWNER)
                 else:
                     self.world_map[y].append(WorldItem.OPEN)
 

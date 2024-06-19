@@ -1,7 +1,7 @@
 import random
 import pyxel
-from enemy_bullet import EnemyBullet, drawBullet
-from world import World, WorldItem, isColliding, TILE_SIZE, SPRITE_BANK
+from enemy_bullet_copy import EnemyBullet, drawBullet
+from world_copy import World, WorldItem, isColliding, TILE_SIZE, SPRITE_BANK
 
 class Enemy:
     IMG = 0 #image bank
@@ -79,6 +79,8 @@ class Enemy:
 
     #MOVEMENT METHODS; SAME AS PLAYER CLASS'
     
+    #ADDED WATER TILE LOGIC
+    
     def move_left(self):
         self.dir = "LEFT"
         self.U = 0
@@ -97,11 +99,11 @@ class Enemy:
         
         if ((
             (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
-            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT) and
+            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.WATER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
-            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT) and
+            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.WATER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)
             )) or ((next_tile_top != WorldItem.OPEN and isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE
             )) or (next_tile_bottom != WorldItem.OPEN and isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE))):
@@ -129,11 +131,11 @@ class Enemy:
 
         if ((
             (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
-            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT) and
+            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.WATER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
-            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT) and
+            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.WATER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)
             )) or ((next_tile_top != WorldItem.OPEN and isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE
             )) or (next_tile_bottom != WorldItem.OPEN and isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE))):
@@ -161,11 +163,11 @@ class Enemy:
 
         if ((
             (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE or 
-            next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT) and
+            next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.WATER) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE or
-            next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT) and
+            next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.WATER) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)
             )) or ((next_tile_top != WorldItem.OPEN and isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE
             )) or (next_tile_bottom != WorldItem.OPEN and isColliding(self.x, new_y, (tile_x + 1) * TILE_SIZE, new_tile_y * TILE_SIZE))):
@@ -194,11 +196,11 @@ class Enemy:
 
         if ((
             (next_tile_top == WorldItem.BRICK or next_tile_top == WorldItem.STONE
-            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT) and
+            or next_tile_top == WorldItem.MIRROR_LEFT  or next_tile_top == WorldItem.MIRROR_RIGHT or next_tile_top == WorldItem.WATER) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == WorldItem.BRICK or next_tile_bottom == WorldItem.STONE
-            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT) and
+            or next_tile_bottom == WorldItem.MIRROR_LEFT  or next_tile_bottom == WorldItem.MIRROR_RIGHT or next_tile_bottom == WorldItem.WATER) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)
             )) or ((next_tile_top != WorldItem.OPEN and isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE
             )) or (next_tile_bottom != WorldItem.OPEN and isColliding(self.x, new_y, (tile_x + 1) * TILE_SIZE, new_tile_y * TILE_SIZE))):

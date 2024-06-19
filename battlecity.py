@@ -35,37 +35,62 @@
 
 #TILEMAP WAS USED; NO PYXELGRID
 import pyxel
-from player import Player
-from world import World, world_item_draw, WorldItem, TILE_SIZE
-from bullet import Bullet, drawBullet
-from enemy import Enemy, drawEnemy
+import yaml
+from player_copy import Player
+from world_copy import World, world_item_draw, WorldItem, isColliding, TILE_SIZE
+from bullet_copy import Bullet, drawBullet
+from enemy_copy import Enemy, drawEnemy
+import time
+import random
 
 TILE_SIZE = 8
 
 class App:
     def __init__(self):
         pyxel.init(128, 128, title = "Battle City") #sCREEN SIZE
-        pyxel.load("pyxeledit.pyxres") #LOADS RESOURCE FILE FOR TILEMAP AND SPRITES
+        pyxel.load("pyxeledit_copy.pyxres") #LOADS RESOURCE FILE FOR TILEMAP AND SPRITES
         self.world = World(pyxel.tilemap(0)) #CREATE INSTANCE OF STAGE (WITH TILEMAP AS ARGUMENT)
         self.player = Player(self.world) #CREATE INSTANCE OF PLAYER CHARACTER
         self.player_bullets = [] #TO STORE ALL BULLETS EJECTED BY PLAYER
-        self.enemy1 = Enemy(32, 72, "DOWN", self.world, self.player)
-        self.enemy2 = Enemy(64, 32, "LEFT", self.world, self.player) 
-        self.enemies = [self.enemy1, self.enemy2] #TO STORE ALL INSTANCES OF ENEMY TANK
+        self.last_spawn_time = time.time()
+        self.SPAWN_COOLDOWN = 10 # TIME INTERVAL FOR ENEMY SPAWNING
+        self.enemies = [] #TO STORE ALL INSTANCES OF ENEMY TANK
         self.isGameOver  = False
         pyxel.run(self.update, self.draw)
 
     def update(self): #RUNS ALL FUNCTIONS EVERY FRAME
+
         if not self.isGameOver:
             self.playerMovement()
             self.shoot()
             self.bulletMovement()
             self.enemyHit()
+            
 
-            for enemy in self.enemies: #ENEMY BULLETS RANDOMIZED SPAWN
+            # PERIODICAL SPAWNING FOR ENEMIES 
+            current_time = time.time()
+            if current_time - self.last_spawn_time >= self.SPAWN_COOLDOWN:
+                DIRECTIONS = ["UP", "DOWN", "LEFT", "RIGHT"]
+                spawn_places = [(4, 9), (8, 4)]  # Tile coordinates (32/8, 72/8) and (64/8, 32/8)
+                chosen_spawn = random.choice(spawn_places)
+
+                tile_x, tile_y = chosen_spawn
+                if self.world.world_map[tile_y][tile_x] == WorldItem.SPAWNER:
+                    spawn_x, spawn_y = tile_x * TILE_SIZE, tile_y * TILE_SIZE
+                    chosen_enemy = Enemy(spawn_x, spawn_y, random.choice(DIRECTIONS), self.world, self.player)
+                    self.enemies.append(chosen_enemy)
+                    self.last_spawn_time = current_time
+            # PERIODICAL SPAWNING FOR ENEMIES
+
+
+            self.world.set(4,9, WorldItem.SPAWNER) # designated enemy spawn spots in the map (ensures spawner tile is set after enemy spawning)
+            self.world.set(8,4, WorldItem.SPAWNER) # designated enemy spawn spots in the map (ensures spawner tile is set after enemy spawning)
+
+            for enemy in self.enemies: 
                 enemy.enemyMovement()
                 enemy.shootBullets()
                 enemy.bulletMovement()
+
 
     def playerMovement(self): #***FUNCTION TO BE MADE A METHOD OF PLAYER LATER
         if pyxel.btn(pyxel.KEY_W):
@@ -88,17 +113,25 @@ class App:
                     bullet.up()
                 elif bullet.dir == "DOWN":
                     bullet.down()
+                
+                # REMOVE INACTIVE BULLETS 
+                if bullet.state == "INACTIVE":
+                    self.player_bullets.remove(bullet)
 
     def shoot(self): #TRIGGER FOR PLAYER'S BULLET #***FUNCTION TO BE MADE A METHOD OF PLAYER LATER
-        if pyxel.btnr(pyxel.KEY_Z):
+        if pyxel.btnr(pyxel.KEY_Z) and not self.player_bullets:
             self.bullet = Bullet(self.player.x, self.player.y, self.player.dir, self.world, self.player)
             self.player_bullets.append(self.bullet)
 
     def enemyHit(self): #CHECKS IF PLAYER'S BULLET HITS AN ENEMY TANK
-        if self.enemies:
-            for enemy in self.enemies:
-                if self.world.world_map[int(enemy.y / TILE_SIZE)][int(enemy.x / TILE_SIZE)] == WorldItem.ENEMY_D:
-                    enemy.state = "INACTIVE"
+        if self.player_bullets and self.enemies:
+            for bullet in self.player_bullets:
+                for enemy in self.enemies:
+                    if isColliding(bullet.x, bullet.y, enemy.x, enemy.y):
+                        enemy.state = "INACTIVE"
+                        bullet.state = "INACTIVE"
+                        break
+        # EDITED SO THAT IT TURNS COLLIDED BULLETS INACTIVE -> INACTIVE BULLETS ARE REMOVED FROM THE LIST (CHECK def bulletMovement)
 
     def draw_game_over(self):
         pyxel.text(128 / 2 - 17, 128 / 2 - 2, 'Game over', 4)
@@ -118,7 +151,8 @@ class App:
                     drawBullet(pyxel, bullet)
                     new_player_bullet.append(bullet)
             self.player_bullets = new_player_bullet #UPDATES PLAYER'S BULLETS LIST (INACTIVE AKA VANISHED BULLETS ARE REOMVED)
-
+            # i tried to test when is the best way to remove the inactive bullets pero PARANG wala naman difference if the remove inactive bullets
+            # is here or in the earlier functions LOL.
 
         if self.enemies: #DRAW ENEMY TANKS
             new_enemies = []
@@ -159,7 +193,14 @@ class App:
                 self.player.HEIGHT
             )
             self.world.clear(int(self.player.x / TILE_SIZE), int(self.player.y / TILE_SIZE))
-        
-        
 
+
+        # ENSURES SPAWNER TILE IS DRAWN ALL TIMES BEFORE SPAWNING
+        for y in range(self.world.HEIGHT):
+            for x in range(self.world.WIDTH):
+                if self.world.world_map[y][x] == WorldItem.SPAWNER:
+                    world_item_draw(pyxel, x, y, WorldItem.SPAWNER)
+        # ENSURES SPAWNER TILE IS DRAWN ALL TIMES BEFORE SPAWNING
+        
+        
 App()
