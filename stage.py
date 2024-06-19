@@ -12,9 +12,7 @@ class StageItem:
     CRACKED_BRICK = (1, 1)
     SPAWNER = (1, 4)
     WATER = (3, 2)
-    HOME = (3,4)
-
-
+    FOREST = (2, 2) #forest
 
 class Stage:
 
@@ -23,7 +21,7 @@ class Stage:
 
 
     def __init__(self, tilemap):
-
+        
         self.tilemap = tilemap
         self.stage_map = [] 
 
@@ -60,10 +58,10 @@ class Stage:
                 elif self.tilemap.pget(x, y) == StageItem.SPAWNER:
 
                     self.stage_map[y].append(StageItem.SPAWNER)
-                
-                elif self.tilemap.pget(x,y) == StageItem.HOME:
 
-                    self.stage_map[y].append(StageItem.HOME)
+                elif self.tilemap.pget(x, y) == StageItem.FOREST:
+
+                    self.stage_map[y].append(StageItem.FOREST)
 
                 else:
 
@@ -93,7 +91,8 @@ def stage_item_draw(pyxel, x, y, stage_item):
         u * TILE_SIZE,
         v * TILE_SIZE,
         TILE_SIZE,
-        TILE_SIZE
+        TILE_SIZE,
+        0
     )
 
 

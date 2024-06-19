@@ -1,5 +1,6 @@
-from stage import Stage, StageItem, isColliding, TILE_SIZE
+from stage import StageItem, isColliding, TILE_SIZE
 from bullet import Bullet
+from sound import PyxelSounds
 import pyxel
 
 class Player:
@@ -27,15 +28,13 @@ class Player:
         self.timer = 0.2
         self.ff_on = False
         self.isGameOver = False
-        self.isGameWon = False
-
+        self.sounds = PyxelSounds()
 
     def player_behavior(self):
 
         self.playerMovement()
         self.shoot()
         self.bulletMovement()
-        self.gameWon()
 
 
     def playerMovement(self):
@@ -116,6 +115,8 @@ class Player:
 
             if len(self.bullets) == 0:
 
+                self.sounds.play_sound(0)
+
                 if self.dir == "LEFT" or self.dir == "RIGHT":
 
                     self.bullet = Bullet(self.x, self.y + 3, self.dir, self.stage, self)
@@ -150,12 +151,6 @@ class Player:
                     bullet.down()
 
 
-    def gameWon(self):
-        print(len(self.enemies))
-        if not self.enemies:
-            self.isGameWon = True
-
-
     def drawPlayer(self):
 
         if self.state == "INACTIVE":
@@ -170,7 +165,8 @@ class Player:
             self.U,
             self.V, 
             self.WIDTH, 
-            self.HEIGHT
+            self.HEIGHT,
+            0
         )
 
 
@@ -197,12 +193,12 @@ class Player:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE
             or next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
+            or next_tile_top == StageItem.WATER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE
             or next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
+            or next_tile_bottom == StageItem.WATER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)
             )):
 
@@ -235,12 +231,12 @@ class Player:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE
             or next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
+            or next_tile_top == StageItem.WATER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE
             or next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
+            or next_tile_bottom == StageItem.WATER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)
             )):
 
@@ -273,12 +269,12 @@ class Player:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE or 
             next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
+            or next_tile_top == StageItem.WATER) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE or
             next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
+            or next_tile_bottom == StageItem.WATER) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)
             )):
 
@@ -312,12 +308,12 @@ class Player:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE
             or next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
+            or next_tile_top == StageItem.WATER) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE
             or next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
+            or next_tile_bottom == StageItem.WATER) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)
             )):
 
