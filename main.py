@@ -1,3 +1,4 @@
+from stage import isColliding
 from player import Player
 from stage import Stage, StageItem, stage_item_draw, TILE_SIZE
 from bullet import drawBullet
@@ -21,13 +22,16 @@ class App:
         self.enemy_1 = Enemy(32, 72, "DOWN", self.stage, self.player, self.enemies)
         self.enemies.append(self.enemy_1)
         self.last_spawn_time = time.time()
-        self.spawn_cooldown = 10
+        self.home = (6,14)
+        self.spawn_cooldown = 5
 
         pyxel.playm(0, loop=True)
 
     def update(self):
         if pyxel.btnp(pyxel.KEY_R):
             self.reset()
+        
+        self.home_hit()
             
         if not self.player.isGameOver and not self.player.isGameWon:
 
@@ -45,6 +49,17 @@ class App:
 
                 enemy.enemyBehavior()
 
+    def home_hit(self):
+        all_bullets = self.player.bullets + [bullet for enemy in self.enemies for bullet in enemy.bullets]
+        home_x, home_y = self.home
+        home_x *= TILE_SIZE
+        home_y *= TILE_SIZE
+
+        for bullet in all_bullets:
+            
+            if isColliding(bullet.x, bullet.y, home_x, home_y):
+                self.player.isGameOver = True
+                return  
 
     def player_hit(self):
 
