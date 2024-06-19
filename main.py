@@ -132,17 +132,18 @@ class App:
 
                 for x in range(len(self.stage.stage_map[0])):
 
-                    if self.stage.stage_map[y][x] == StageItem.OPEN:
+                    if self.stage.stage_map[y][x] == StageItem.SPAWNER:
 
                         spawn_places.append((y, x))
 
+            print(spawn_places)
             chosen_spawn = random.choice(spawn_places)
 
             tile_x, tile_y = chosen_spawn
 
-            if self.stage.stage_map[tile_y][tile_x] == StageItem.OPEN:
+            if self.stage.stage_map[tile_x][tile_y] == StageItem.SPAWNER:
 
-                spawn_x, spawn_y = tile_x * TILE_SIZE, tile_y * TILE_SIZE
+                spawn_x, spawn_y = tile_y * TILE_SIZE, tile_x * TILE_SIZE
                 chosen_enemy = Enemy(spawn_x, spawn_y, random.choice(directions), self.stage, self.player, self.enemies)
                 self.enemies.append(chosen_enemy)
                 self.last_spawn_time = current_time

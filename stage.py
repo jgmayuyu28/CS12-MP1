@@ -10,6 +10,7 @@ class StageItem:
     MIRROR_RIGHT = (5, 1)
     OPEN = (0, 0)
     CRACKED_BRICK = (1, 1)
+    SPAWNER = (1, 4)
     WATER = (3, 2)
 
 
@@ -46,13 +47,17 @@ class Stage:
 
                     self.stage_map[y].append(StageItem.MIRROR_RIGHT)
 
-                elif self.tilemap.pget(x, y) == StageItem.CRACKED_BRICK: # PHASE 2
+                elif self.tilemap.pget(x, y) == StageItem.CRACKED_BRICK:
 
                     self.stage_map[y].append(StageItem.CRACKED_BRICK)
 
-                elif self.tilemap.pget(x, y) == StageItem.WATER: # PHASE 2
+                elif self.tilemap.pget(x, y) == StageItem.WATER:
 
                     self.stage_map[y].append(StageItem.WATER)
+
+                elif self.tilemap.pget(x, y) == StageItem.SPAWNER:
+
+                    self.stage_map[y].append(StageItem.SPAWNER)
 
                 else:
 
