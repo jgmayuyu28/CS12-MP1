@@ -1,9 +1,9 @@
 import random
 import pyxel
 from bullet import Bullet, drawBullet
-from stage import Stage, StageItem, isColliding, TILE_SIZE, SPRITE_BANK
+from stage import StageItem, isColliding, TILE_SIZE, SPRITE_BANK
 
-class Enemy:
+class Stronger_Enemy:
 
     IMG = 0
     U = 0 
@@ -14,7 +14,7 @@ class Enemy:
     DY = 1 
 
 
-    def __init__(self, x, y, dir, stage, player, enemies):
+    def __init__(self, x, y, dir, stage, player, enemies, health):
 
         self.x = x
         self.y = y
@@ -22,27 +22,28 @@ class Enemy:
         self.prev_y = y
         self.stage = stage
         self.dir = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
-        self.movement_countdown = random.randint(3, 5)
+        self.movement_countdown = random.randint(6,10)
         self.bullets = []
-        self.bullet_countdown = random.randint(1, 3)
+        self.bullet_countdown = random.randint(2,6)
         self.player = player
         self.enemies = enemies
+        self.health = health
 
         if dir == "LEFT":
 
-            self.U, self.V = 0, 24
+            self.U, self.V = 32, 24
 
         elif dir == "RIGHT":
 
-            self.U, self.V = 0, 16
+            self.U, self.V = 32, 16
 
         elif dir == "UP":
 
-            self.U, self.V = 8, 24
+            self.U, self.V = 40, 24
 
         else:
 
-            self.U, self.V = 8, 16
+            self.U, self.V = 40, 16
 
         self.state = "ACTIVE"
     
@@ -69,6 +70,7 @@ class Enemy:
                 ) and (self.x != enemy.x):
                     
                     is_free += 1
+                    
 
             if is_free == 0:
 
@@ -133,7 +135,7 @@ class Enemy:
         if self.movement_countdown <= 0:
 
             self.dir = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
-            self.movement_countdown  = random.randint(4,8)
+            self.movement_countdown = random.randint(6,10)
 
 
     def shootBullets(self):
@@ -144,7 +146,7 @@ class Enemy:
 
             self.bullet = Bullet(self.x + 3, self.y + 3, self.dir, self.stage, self.player)
             self.bullets.append(self.bullet)
-            self.bullet_countdown = random.randint(4, 8)
+            self.bullet_countdown = random.randint(2,6)
     
 
     def bulletMovement(self):
@@ -189,7 +191,7 @@ class Enemy:
     def move_left(self):
 
         self.dir = "LEFT"
-        self.U = 0
+        self.U = 32
         self.V = 24
         
         new_x = self.x - self.DX
@@ -207,12 +209,12 @@ class Enemy:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE
             or next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HEART_OFF or next_tile_top == StageItem.HEART_ON) and
+            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE
             or next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HEART_OFF or next_tile_bottom == StageItem.HEART_ON) and
+            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)
             )
         ) or (self.player.x + self.player.WIDTH > new_x
@@ -230,7 +232,7 @@ class Enemy:
     def move_right(self):
 
         self.dir = "RIGHT"
-        self.U = 0
+        self.U = 32
         self.V = 16
         
         new_x = self.x + self.DX
@@ -248,12 +250,12 @@ class Enemy:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE
             or next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HEART_OFF or next_tile_top == StageItem.HEART_ON) and
+            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE
             or next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HEART_OFF or next_tile_bottom == StageItem.HEART_ON) and
+            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)
             )
         ) or (self.player.x + self.player.WIDTH > new_x
@@ -271,7 +273,7 @@ class Enemy:
     def move_up(self):
 
         self.dir = "UP"
-        self.U = 8
+        self.U = 40
         self.V = 24
 
         new_y = self.y - self.DY
@@ -289,12 +291,12 @@ class Enemy:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE or 
             next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HEART_OFF or next_tile_top == StageItem.HEART_ON) and
+            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE or
             next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HEART_OFF or next_tile_bottom == StageItem.HEART_ON) and
+            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)
             )
         ) or (self.player.x + self.player.WIDTH > self.x
@@ -312,7 +314,7 @@ class Enemy:
     def move_down(self):
 
         self.dir = "DOWN"
-        self.U = 8
+        self.U = 40
         self.V = 16
         self.WIDTH *= 1
 
@@ -331,12 +333,12 @@ class Enemy:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE
             or next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HEART_OFF or next_tile_top == StageItem.HEART_ON) and
+            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE
             or next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HEART_OFF or next_tile_bottom == StageItem.HEART_ON) and
+            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
             isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)
             )
         ) or (self.player.x + self.player.WIDTH > self.x
@@ -351,25 +353,25 @@ class Enemy:
         self.y = new_y
 
 
-def drawEnemy(pyxel, enemy):
+def draw_StrongerEnemy(pyxel, enemy):
     
     U, V = 0, 0
 
     if enemy.dir == "LEFT":
 
-        U, V = 0, 24
+        U, V = 32, 24
 
     elif enemy.dir == "RIGHT":
 
-        U, V = 0, 16
+        U, V = 32, 16
 
     elif enemy.dir == "UP":
 
-        U, V = 8, 24
+        U, V = 40, 24
 
     elif enemy.dir == "DOWN":
 
-        U, V = 8, 16
+        U, V = 40, 16
 
     pyxel.blt(
     enemy.x,
@@ -378,6 +380,5 @@ def drawEnemy(pyxel, enemy):
     U,
     V,
     8,
-    8, 
-    0
+    8
 )

@@ -12,7 +12,10 @@ class StageItem:
     CRACKED_BRICK = (1, 1)
     SPAWNER = (1, 4)
     WATER = (3, 2)
-    FOREST = (2, 2) #forest
+    HOME = (3,3)
+    FOREST = (2, 2) 
+    HEART_ON = (1,5)
+    HEART_OFF = (1,6)
 
 class Stage:
 
@@ -62,6 +65,18 @@ class Stage:
                 elif self.tilemap.pget(x, y) == StageItem.FOREST:
 
                     self.stage_map[y].append(StageItem.FOREST)
+                
+                elif self.tilemap.pget(x,y) == StageItem.HOME:
+
+                    self.stage_map[y].append(StageItem.HOME)
+
+                elif self.tilemap.pget(x,y) == StageItem.HEART_ON:
+
+                    self.stage_map[y].append(StageItem.HEART_ON)
+                
+                elif self.tilemap.pget(x,y) == StageItem.HEART_OFF:
+
+                    self.stage_map[y].append(StageItem.HEART_OFF)
 
                 else:
 

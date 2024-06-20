@@ -1,5 +1,5 @@
 import pyxel
-from stage import StageItem, TILE_SIZE, SPRITE_BANK, isColliding
+from stage import Stage, StageItem, TILE_SIZE, SPRITE_BANK, isColliding
 
 class Bullet:
 
@@ -43,7 +43,8 @@ class Bullet:
 
         if (
             (next_tile == StageItem.BRICK or next_tile == StageItem.CRACKED_BRICK or next_tile == StageItem.STONE
-            or next_tile == StageItem.MIRROR_LEFT  or next_tile == StageItem.MIRROR_RIGHT) and
+            or next_tile == StageItem.MIRROR_LEFT  or next_tile == StageItem.MIRROR_RIGHT 
+            or next_tile == StageItem.HEART_ON or next_tile == StageItem.HEART_OFF) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ):
 
@@ -72,6 +73,16 @@ class Bullet:
                 self.x, self.y = (new_tile_x * TILE_SIZE) + 3, (tile_y * TILE_SIZE) - 3 
                 
             elif next_tile == StageItem.STONE:
+
+                self.state = "INACTIVE"
+                return
+            
+            elif next_tile == StageItem.HEART_ON:
+
+                self.state = "INACTIVE"
+                return
+            
+            elif next_tile == StageItem.HEART_OFF:
 
                 self.state = "INACTIVE"
                 return
@@ -106,7 +117,8 @@ class Bullet:
 
         if (
             (next_tile == StageItem.BRICK or next_tile == StageItem.CRACKED_BRICK or next_tile == StageItem.STONE
-            or next_tile == StageItem.MIRROR_LEFT  or next_tile == StageItem.MIRROR_RIGHT) and
+            or next_tile == StageItem.MIRROR_LEFT  or next_tile == StageItem.MIRROR_RIGHT
+            or next_tile == StageItem.HEART_ON or next_tile == StageItem.HEART_OFF) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ):
 
@@ -135,6 +147,16 @@ class Bullet:
                 self.x, self.y = (new_tile_x * TILE_SIZE) + 3, (tile_y * TILE_SIZE) + 3
 
             elif next_tile == StageItem.STONE:
+
+                self.state = "INACTIVE"
+                return
+            
+            elif next_tile == StageItem.HEART_ON:
+
+                self.state = "INACTIVE"
+                return
+            
+            elif next_tile == StageItem.HEART_OFF:
 
                 self.state = "INACTIVE"
                 return
@@ -169,7 +191,8 @@ class Bullet:
 
         if (
             (next_tile == StageItem.BRICK or next_tile == StageItem.CRACKED_BRICK or next_tile == StageItem.STONE
-            or next_tile == StageItem.MIRROR_LEFT  or next_tile == StageItem.MIRROR_RIGHT) and
+            or next_tile == StageItem.MIRROR_LEFT  or next_tile == StageItem.MIRROR_RIGHT
+            or next_tile == StageItem.HEART_ON or next_tile == StageItem.HEART_OFF) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ):
 
@@ -198,6 +221,16 @@ class Bullet:
                 self.x, self.y = (tile_x * TILE_SIZE) - 3, (new_tile_y * TILE_SIZE) - 3
 
             elif next_tile == StageItem.STONE:
+
+                self.state = "INACTIVE"
+                return
+            
+            elif next_tile == StageItem.HEART_ON:
+
+                self.state = "INACTIVE"
+                return
+            
+            elif next_tile == StageItem.HEART_OFF:
 
                 self.state = "INACTIVE"
                 return
@@ -230,7 +263,8 @@ class Bullet:
 
         if (
             (next_tile == StageItem.BRICK or next_tile == StageItem.CRACKED_BRICK or next_tile == StageItem.STONE
-            or next_tile == StageItem.MIRROR_LEFT  or next_tile == StageItem.MIRROR_RIGHT) and
+            or next_tile == StageItem.MIRROR_LEFT  or next_tile == StageItem.MIRROR_RIGHT
+            or next_tile == StageItem.HEART_ON or next_tile == StageItem.HEART_OFF) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ):
 
@@ -259,6 +293,16 @@ class Bullet:
                 self.x, self.y = (tile_x * TILE_SIZE) + 3, (new_tile_y * TILE_SIZE) + 3
 
             elif next_tile == StageItem.STONE:
+
+                self.state = "INACTIVE"
+                return
+            
+            elif next_tile == StageItem.HEART_ON:
+
+                self.state = "INACTIVE"
+                return
+            
+            elif next_tile == StageItem.HEART_OFF:
 
                 self.state = "INACTIVE"
                 return
