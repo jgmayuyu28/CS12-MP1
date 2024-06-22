@@ -22,7 +22,7 @@ class Stronger_Enemy:
         self.prev_y = y
         self.stage = stage
         self.dir = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
-        self.movement_countdown = random.randint(6,10)
+        self.movement_countdown = random.randint(6,8)
         self.bullets = []
         self.bullet_countdown = random.randint(2,6)
         self.player = player
@@ -209,12 +209,14 @@ class Stronger_Enemy:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE
             or next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
+            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HEART_OFF or next_tile_top == StageItem.HEART_ON
+            or next_tile_top == StageItem.HOME or next_tile_top == StageItem.SPAWNER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE
             or next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
+            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HEART_OFF or next_tile_bottom == StageItem.HEART_ON
+            or next_tile_bottom == StageItem.HOME or next_tile_bottom == StageItem.SPAWNER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)
             )
         ) or (self.player.x + self.player.WIDTH > new_x
@@ -250,12 +252,14 @@ class Stronger_Enemy:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE
             or next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
+            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HEART_OFF or next_tile_top == StageItem.HEART_ON
+            or next_tile_top == StageItem.HOME or next_tile_top == StageItem.SPAWNER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE
             or next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
+            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HEART_OFF or next_tile_bottom == StageItem.HEART_ON
+            or next_tile_bottom == StageItem.HOME or next_tile_bottom == StageItem.SPAWNER) and
             isColliding(new_x, self.y, new_tile_x * TILE_SIZE, (tile_y + 1) * TILE_SIZE)
             )
         ) or (self.player.x + self.player.WIDTH > new_x
@@ -291,13 +295,15 @@ class Stronger_Enemy:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE or 
             next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
+            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HEART_OFF or next_tile_top == StageItem.HEART_ON
+            or next_tile_top == StageItem.HOME or next_tile_top == StageItem.SPAWNER) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE or
             next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
-            isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)
+            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HEART_OFF or next_tile_bottom == StageItem.HEART_ON
+            or next_tile_bottom == StageItem.HOME or next_tile_bottom == StageItem.SPAWNER) and
+            isColliding(self.x, new_y, (tile_x + 1) * TILE_SIZE, new_tile_y * TILE_SIZE)
             )
         ) or (self.player.x + self.player.WIDTH > self.x
             and self.x + self.WIDTH > self.player.x
@@ -333,13 +339,15 @@ class Stronger_Enemy:
         if ((
             (next_tile_top == StageItem.BRICK or next_tile_top == StageItem.CRACKED_BRICK or next_tile_top == StageItem.STONE
             or next_tile_top == StageItem.MIRROR_LEFT  or next_tile_top == StageItem.MIRROR_RIGHT
-            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HOME) and
+            or next_tile_top == StageItem.WATER or next_tile_top == StageItem.HEART_OFF or next_tile_top == StageItem.HEART_ON
+            or next_tile_top == StageItem.HOME or next_tile_top == StageItem.SPAWNER) and
             isColliding(self.x, new_y, tile_x * TILE_SIZE, new_tile_y * TILE_SIZE)
         ) or (
             (next_tile_bottom == StageItem.BRICK or next_tile_bottom == StageItem.CRACKED_BRICK or next_tile_bottom == StageItem.STONE
             or next_tile_bottom == StageItem.MIRROR_LEFT  or next_tile_bottom == StageItem.MIRROR_RIGHT
-            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HOME) and
-            isColliding(self.x, new_y, (tile_x+1) * TILE_SIZE, new_tile_y * TILE_SIZE)
+            or next_tile_bottom == StageItem.WATER or next_tile_bottom == StageItem.HEART_OFF or next_tile_bottom == StageItem.HEART_ON
+            or next_tile_bottom == StageItem.HOME or next_tile_bottom == StageItem.SPAWNER) and
+            isColliding(self.x, new_y, (tile_x + 1) * TILE_SIZE, new_tile_y * TILE_SIZE)
             )
         ) or (self.player.x + self.player.WIDTH > self.x
             and self.x + self.WIDTH > self.player.x
