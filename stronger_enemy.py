@@ -144,7 +144,7 @@ class Stronger_Enemy:
 
         if self.bullet_countdown <= 0:
 
-            self.bullet = Bullet(self.x + 3, self.y + 3, self.dir, self.stage, self.player)
+            self.bullet = Bullet(self.x + 3, self.y + 3, self.dir, self.stage, self.player, True)
             self.bullets.append(self.bullet)
             self.bullet_countdown = random.randint(2,6)
     
@@ -380,5 +380,6 @@ def draw_StrongerEnemy(pyxel, enemy):
     U,
     V,
     8,
-    8
+    8,
+    0
 )

@@ -3,8 +3,9 @@ from stage import Stage, StageItem, TILE_SIZE, SPRITE_BANK, isColliding
 
 class Bullet:
 
-    def __init__(self, x, y, dir, stage, player):
+    def __init__(self, x, y, dir, stage, player, isEnemy):
 
+        self.isEnemy = isEnemy
         self.x = x
         self.y = y
         self.dir = dir
@@ -32,8 +33,10 @@ class Bullet:
 
 
     def left(self):
+        if not self.isEnemy:
 
-        self.player.timer -= 0.05
+            self.player.timer -= 0.5
+        
         new_x = (self.x - 3)
         tile_y = int(self.y / TILE_SIZE)
         tile_x = int(self.x / TILE_SIZE)
@@ -51,7 +54,7 @@ class Bullet:
             if next_tile == StageItem.BRICK:
 
                 self.state = "INACTIVE"
-                self.stage.set(new_tile_x, tile_y, StageItem.CRACKED_BRICK)
+                self.stage.set(new_tile_x, tile_y, StageItem.CRACKED_BRICK, "CRACKED_BRICK")
                 return
             
             elif next_tile == StageItem.CRACKED_BRICK:
@@ -64,13 +67,13 @@ class Bullet:
 
                 self.state = "ACTIVE"
                 self.dir = "DOWN"
-                self.x, self.y = (new_tile_x * TILE_SIZE) + 3, (tile_y * TILE_SIZE) + 3 
+                self.x, self.y = (new_tile_x * TILE_SIZE), (tile_y * TILE_SIZE) 
 
             elif next_tile == StageItem.MIRROR_RIGHT:
 
                 self.state = "ACTIVE"
                 self.dir = "UP"
-                self.x, self.y = (new_tile_x * TILE_SIZE) + 3, (tile_y * TILE_SIZE) - 3 
+                self.x, self.y = (new_tile_x * TILE_SIZE), (tile_y * TILE_SIZE)
                 
             elif next_tile == StageItem.STONE:
 
@@ -107,7 +110,10 @@ class Bullet:
 
     def right(self):
 
-        self.player.timer -= 0.05
+        if not self.isEnemy:
+
+            self.player.timer -= 0.02
+        
         new_x = (self.x + 3)
         tile_y = int(self.y / TILE_SIZE)
         tile_x = int(self.x / TILE_SIZE)
@@ -125,7 +131,7 @@ class Bullet:
             if next_tile == StageItem.BRICK:
 
                 self.state = "INACTIVE"
-                self.stage.set(new_tile_x, tile_y, StageItem.CRACKED_BRICK)
+                self.stage.set(new_tile_x, tile_y, StageItem.CRACKED_BRICK, "CRACKED_BRICK")
                 return
             
             elif next_tile == StageItem.CRACKED_BRICK:
@@ -181,7 +187,10 @@ class Bullet:
 
     def up(self):
 
-        self.player.timer -= 0.05
+        if not self.isEnemy:
+
+            self.player.timer -= 0.02
+        
         new_y = (self.y - 3)
         tile_y = int(self.y / TILE_SIZE)
         tile_x = int(self.x / TILE_SIZE)
@@ -199,7 +208,7 @@ class Bullet:
             if next_tile == StageItem.BRICK:
 
                 self.state = "INACTIVE"
-                self.stage.set(tile_x, new_tile_y, StageItem.CRACKED_BRICK)
+                self.stage.set(tile_x, new_tile_y, StageItem.CRACKED_BRICK, "CRACKED_BRICK")
                 return
             
             elif next_tile == StageItem.CRACKED_BRICK:
@@ -253,7 +262,10 @@ class Bullet:
 
     def down(self):
 
-        self.player.timer -= 0.05
+        if not self.isEnemy:
+
+            self.player.timer -= 0.02
+        
         new_y = (self.y + 3)
         tile_y = int(self.y / TILE_SIZE)
         tile_x = int(self.x / TILE_SIZE)
@@ -271,7 +283,7 @@ class Bullet:
             if next_tile == StageItem.BRICK:
 
                 self.state = "INACTIVE"
-                self.stage.set(tile_x, new_tile_y, StageItem.CRACKED_BRICK)
+                self.stage.set(tile_x, new_tile_y, StageItem.CRACKED_BRICK, "CRACKED_BRICK")
                 return
             
             elif next_tile == StageItem.CRACKED_BRICK:
@@ -284,13 +296,13 @@ class Bullet:
 
                 self.state = "ACTIVE"
                 self.dir = "LEFT"
-                self.x, self.y = (tile_x * TILE_SIZE) - 3, (new_tile_y * TILE_SIZE) + 3
+                self.x, self.y = (tile_x * TILE_SIZE), (new_tile_y * TILE_SIZE)
 
             elif next_tile == StageItem.MIRROR_RIGHT:
 
                 self.state = "ACTIVE"
                 self.dir = "RIGHT"
-                self.x, self.y = (tile_x * TILE_SIZE) + 3, (new_tile_y * TILE_SIZE) + 3
+                self.x, self.y = (tile_x * TILE_SIZE), (new_tile_y * TILE_SIZE)
 
             elif next_tile == StageItem.STONE:
 
